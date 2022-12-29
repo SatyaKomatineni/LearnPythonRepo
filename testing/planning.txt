@@ -1,0 +1,38 @@
+1/2/22
+
+Lesson plans
+
+High level TOC
+********************
+1. scripts, files, comments, variables, global functions
+2. Global functions
+3. Function syntax
+4. String processing
+5. File processing
+5. Date processing
+6. Command line processing
+7. Classes
+8. Reusing functions (libraries)
+9. More formal libraries, Modules
+
+Medium TOC
+****************
+Jupyter
+Editor
+Code completion
+Online
+
+Medium TOC
+*************
+1. collections, iterators, enumerators
+2. Functional programming
+
+New TOC
+*************
+1. pandas
+2. numpy
+3. graphics libs
+4. data/ml
+
+Data science TOC
+********************
