@@ -1,0 +1,18 @@
+3/3/2024
+
+Pydantic Classes
+*******************
+
+Assume I am an experienced java programmer that is trying to find out the capabiliites of Pydantic python library.
+
+1. Tell me all of its high level capabilities
+2. Give some examples of those capabilities
+3. what are some lesser known uses of Pydantic library
+
+
+Typing
+***************
+1. Can you give some examples of type hints in the latest python releases, especially using collections in a type safe way. 
+2. If any imports are needed show the imports
+3. Place all the imports at the top of the code
+4. I don't need a function example, but just code snippets

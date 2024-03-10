@@ -2,17 +2,21 @@
 from baselib import baselog as log
 import os
 import pickle
-
+from pathlib import Path
+import baselib
+from typing import Any
 
 """
 ***********************************
 Static directories functions
 ***********************************
 """
+def getProjectRoot():
+    return _getProjectRoot()
+
 def getDataRoot():
-    s = r'.'
-    return s
-    
+    return pathjoin(getProjectRoot(), "data")    
+
 def getDatasetRoot():
     return os.path.join(getDataRoot(),"datasets")
 
@@ -26,13 +30,19 @@ def pathjoin(seg1: str, path: str):
 def getTempDataRoot():
     return os.path.join(getDataRoot(),"tempdata")
 
+def _getProjectRoot() -> str:
+    baselibPath = Path(baselib.__file__)
+    parent = baselibPath.parent.parent.resolve()
+    return str(parent)
+
+
 
 """
 ***********************************
 writing to files
 ***********************************
 """
-def save_text_to_file(text, filename):
+def save_text_to_file(text: str, filename: str):
     """
     Saves the given text to a file.
 
@@ -56,7 +66,7 @@ def testSaveToFile():
 Reading from files
 ***********************************
 """
-def read_text_file(file_path):
+def read_text_file(file_path: str):
     with open(file_path, 'r', encoding='utf-8') as file:
         file_contents = file.read()
     return file_contents
@@ -67,13 +77,13 @@ def read_text_file(file_path):
 General utilities
 ***********************************
 """
-def getEnvVariable(name, default):
+def getEnvVariable(name: str, default: str):
     value = os.environ[name] 
-    if value == None:
+    if log.isEmptyString(value):
         return default
     return value
 
-def exists(fullfilePath):
+def exists(fullfilePath: str):
     return os.path.exists(fullfilePath)
 
 """
@@ -81,19 +91,19 @@ def exists(fullfilePath):
 * Object state
 *************************************************
 """
-def getTempDataFilename(filename):
+def getTempDataFilename(filename: str):
     tempDataRoot = getTempDataRoot()
     return pathjoin(tempDataRoot, filename)
 
-def store_object_to_file(obj, filename):
+def store_object_to_file(obj: Any, filename: str):
     filepath = getTempDataFilename(filename)
     with open(filepath, 'wb') as f:
         pickle.dump(obj, f)
     return filepath
 
-def read_object_from_file(filename):
+def read_object_from_file(filename: str):
     filepath = getTempDataFilename(filename)
-    with open(filename, 'rb') as f:
+    with open(filepath, 'rb') as f:
         obj = pickle.load(f)
     return obj
 

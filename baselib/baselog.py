@@ -14,7 +14,7 @@ Usage:
 #**********************************************
 """
 import regex as re
-
+from typing import Any
    
 """
 #**********************************************
@@ -83,11 +83,21 @@ def trace(m: str):
 def info(m: str):
     dprint(f"info: {m}")
 
+"""
+*************************************************
+* Log exception
+*************************************************
+"""
+def logException(msg: str, e: Exception):
+    ph(msg, str(e))
+
+
+
 #**********************************************
 # Validation functions
 #**********************************************
 
-def validate_not_null_or_empty(context: str, *args):
+def validate_not_null_or_empty(context: str, *args: Any):
     for arg in args:
         if arg is None:
             raise ValueError(f"The specified Argument {arg} cannot be null or empty.\nContext: {context}")
@@ -95,12 +105,9 @@ def validate_not_null_or_empty(context: str, *args):
             raise ValueError(f"The specified Argument {arg} cannot be an empty string\nContext: {context}")
 
 
-def examine_large_string(text, max_length, context: str):
+def examine_large_string(text: str, max_length: int, context: str):
     ph1(f"Examining a large string: {context}")
-    if text is None:
-        dprint("The input string is None.")
-        return
-    if not text.strip():
+    if isEmptyString(text):
         dprint("The input string is empty.")
         return
     dprint("It is a valid string")
@@ -108,10 +115,10 @@ def examine_large_string(text, max_length, context: str):
     dprint(f"\n{text[:max_length]}")
 
 def isValidString(s: str):
-    return not isValidString(s)
+    return bool(s and not s.isspace())
 
 def isEmptyString(s: str):
-    return bool(s and not s.isspace())
+    return not isValidString(s)
 
 #**********************************************
 # End: Validation functions
@@ -120,7 +127,7 @@ def isEmptyString(s: str):
 #**********************************************
 # Utility functions
 #**********************************************
-def is_roman_numeral(s):
+def is_roman_numeral(s: str):
     # Regular expression pattern for Roman numerals
     pattern = r'^[IVXLCDM]+$'
 
@@ -130,7 +137,7 @@ def is_roman_numeral(s):
     else:
         return False
     
-def summarizeDictionary(d: dict):
+def summarizeDictionary(d: dict[Any, Any]):
     ph1("Summarizing a dictionary")
     size = len(d)
     if size == 0:
@@ -141,7 +148,7 @@ def summarizeDictionary(d: dict):
     pair = next(enumerate(d.items()))
     dprint(f"{pair[1]}")
 
-def summarizeLargeText(large_text):
+def summarizeLargeText(large_text: str):
     validate_not_null_or_empty(large_text)
     dprint(large_text[:200])
     
@@ -153,9 +160,17 @@ def testSummarizeDictionary():
 # Utility functions
 #**********************************************
 
+def _testStrings():
+    ph1("Testing strings")
+    info(f"{isEmptyString('ddd')}")
+    info(f"{isValidString('ddd')}")
+    info(f"{isValidString('')}")
+    info(f"{isValidString('   ')}")
+
 def localTest():
     ph1("Starting local test")
     testSummarizeDictionary()
+    _testStrings()
     print ("End local test")
 
 if __name__ == '__main__':
