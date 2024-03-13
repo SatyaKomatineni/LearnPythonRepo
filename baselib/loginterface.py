@@ -15,6 +15,9 @@ For now:
 1. Go with the core idea
 2. Come back later and enhance it
 
+Derived classes:
+1. TrivialLog
+
 """
 
 """
@@ -58,3 +61,50 @@ class ICoreLog(ABC):
         Returns True if it is necessary, False otherwise.
         """
         pass
+
+"""
+*************************************************
+* Trivial log
+*************************************************
+"""
+
+from baselib import baselog as log
+class TrivialLog(ICoreLog):
+
+    def log(self, message: str, msgType: str) -> None:
+        print(f"{msgType}:{message}")
+
+    def logE(self, t: Exception, cause: Optional[str] = None) -> None:
+        if cause:
+            log.logException(cause, t)
+        else:
+            log.logException("Exception", t)
+
+    def isItNecessaryToLog(self, msgType: str) -> bool:
+        return True
+
+"""
+*************************************************
+* TrivialConfigLog
+*************************************************
+"""
+from baselib.objectinterfaces import (ISingleton, IInitializable)
+class TrivialConfigLog(ICoreLog, ISingleton, IInitializable):
+
+    #Use this to read additional logging related configuration
+    configRootContext: str
+
+    def initialize(self, rootContext: str) -> None:
+        self.configRootContext = rootContext
+
+    def log(self, message: str, msgType: str) -> None:
+        print(f"{msgType}:{message}")
+
+    def logE(self, t: Exception, cause: Optional[str] = None) -> None:
+        if cause:
+            log.logException(cause, t)
+        else:
+            log.logException("Exception", t)
+
+    def isItNecessaryToLog(self, msgType: str) -> bool:
+        return True

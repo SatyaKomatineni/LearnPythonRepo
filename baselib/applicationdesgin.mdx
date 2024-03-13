@@ -1,0 +1,52 @@
+*****************************************
+# Design thoughts on applications
+*****************************************
+Main ideas:
+
+1. Configuration objects
+2. How interfaces can indicate their constructor dependencies!
+3. Docs: Application classes, interfaces and implementations
+4. Dual instantiations
+5. Optimize factory object cache locking for non singletons
+
+## Configuration objects
+*****************************************
+1. Provide for configuration data objects
+2. By extending or tagging as ConfigObject the factory will fill and return
+3. One way to objectify configuration with or without behavior
+4. A future factory implementation can do that
+
+
+## How interfaces can indicate their constructor dependencies!
+*****************************************
+1. Have the factory take an "object" as part of its construction
+2. Let the interface provide a class method that could take arguments and return an object of the right type!
+3. Pass that method to the factory
+4. factory will then initialize the derived classes with that object
+
+### cautions
+*****************************************
+1. There could be a class of implementations where the constructor could differ
+2. Example: filename based configurations vs database based configurations!
+3. This "knowledge" is ensconced  in the "implementation" and not in the interface!!
+4. Have hybrid interfaces (factories) like "FileBasedConfig" that knows the args of that class
+
+## Docs: Application classes, interfaces and implementations
+*****************************************
+tbd
+
+# Dual instantiations
+***************************
+1. Factory classes assume that they are instantiated from configuration
+2. Some times you may want to instantiate them programmatically like say when you want to test them
+3. Provide an approach for it
+4. Is that through a constructor? or an explicit disciplined init method?
+5. Or through dependency injection to unify both methods?
+
+# Optimize factory object cache locking for non singletons
+*****************************************
+1. Right now the cache is locked for multi instance classes every time
+2. Although a class doesnt require caching, one may not know that until the object is instantiated
+3. Couple of ways
+    1. Ask the class itself and not the object instance for that decision
+    2. Provide a hint in the config file against that class (probably not)

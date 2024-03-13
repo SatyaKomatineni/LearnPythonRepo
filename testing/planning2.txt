@@ -16,3 +16,11 @@ Typing
 2. If any imports are needed show the imports
 3. Place all the imports at the top of the code
 4. I don't need a function example, but just code snippets
+
+Type checking
+********************
+is there a function in python that asserts if an object is of certain type
+
+Write me a function: assertType(object: Any, typename, message: str)
+1. It shoudl check if the arg "object" is of type "typename" in python
+2. if it is not raise an appropriate exception, by somehow including the passed in message as part of the exception message

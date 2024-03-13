@@ -41,7 +41,16 @@ from baselib import baselog as log
 
 import importlib
 from typing import Any, Type
+from baselib.objectinterfaces import ISingleton
 
+def isSingleton(cls: Type[Any]) -> bool:
+    return issubclass(cls,ISingleton)
+
+def isMultiInstance(cls: Type[Any]) -> bool:
+    return not isSingleton(cls)
+
+def create_class_instance(cls: Type[Any]) -> Any:
+    return cls()
 
 def load_class(full_class_name: str) -> Any:
     """
@@ -56,7 +65,7 @@ def load_class(full_class_name: str) -> Any:
     cls: Type[Any] = getattr(module, class_name)
     return cls()
 
-def load_class_with_default(full_class_name: str, default_object: Any) -> Any:
+def create_class_instance_with_default(full_class_name: str, default_object: Any) -> Any:
     """
     Attempts to instantiate a class by its fully qualified name,
     returning a default object if an exception occurs. Specific exceptions are logged with adjusted messages.
@@ -66,7 +75,10 @@ def load_class_with_default(full_class_name: str, default_object: Any) -> Any:
     :return: An instance of the class or the default object if instantiation fails.
     """
     try:
-        return load_class(full_class_name)
+        cls = load_class(full_class_name)
+        obj = create_class_instance(cls)
+        return obj
+
     except ModuleNotFoundError as e:
         log.logException(f"Module not found while attempting to load {full_class_name}", e)
     except AttributeError as e:
@@ -74,4 +86,38 @@ def load_class_with_default(full_class_name: str, default_object: Any) -> Any:
     except Exception as e:
         log.logException(f"Failed to load and instantiate {full_class_name} due to an unexpected error", e)
     return default_object
+
+"""
+*************************************************
+* BaseFactory
+*************************************************
+Goal:
+1. Based on a dictionary
+
+Logic:
+I). Create an abstract class BaseFactory
+2. abstract method
+    1. getDictionary() -> dict[str, Any]
+3. private instance variables
+    1. dictionary: dict[str, Any]
+4. __init__
+    1. calls the getDictionary() and sets the local dictionary
+2. instance methods
+    1. getObject(name: str) -> Any
+        locate the value from dictionary using 'name' as the key
+        raise an exception if not found
+        return if found
+    2. getObjectWithDefault(name: str, defaultobj: Any) -> Any
+        call getObject and return its output
+        if an exception return the defaultobj
+
+II). Create a second class called TOMLBaseFactory extending BaseFactory
+1. __init__ takes a filename
+    stores the filename in a private variable
+
+2. implements the getDictionary() abstract method
+    reads the file contents as a dictionary
+    returns the dictionary
+
+"""
 

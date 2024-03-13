@@ -16,8 +16,18 @@ from flatten_dict import flatten #type:ignore
 from baselib import baselog as log
 from baselib import fileutils as fileutils
 
+"""
+Given a toml configuration filename returna  flattened dictionary.
+Public method.
+"""
+def getTOML_flattened_dictionary(tomlConfigFilename: str)-> dict[str, Any]:
+    return _getFlattenedDictionary(tomlConfigFilename)
 
+"""
+Given a toml configuration filename returna  flattened dictionary
+"""
 def _getFlattenedDictionary(tomlConfigFilename: str) -> dict[str, Any]:
+    log.ph("Reading TOML configuration file", tomlConfigFilename)
     # Read and parse the toml file
     toml_str = fileutils.read_text_file(tomlConfigFilename)
     parsed_toml: tomlkit.TOMLDocument = tomlkit.parse(toml_str)
@@ -27,9 +37,6 @@ def _getFlattenedDictionary(tomlConfigFilename: str) -> dict[str, Any]:
     new_dict = _process_dict_for_aliases(dict)
     flat_dict = flatten(new_dict, reducer="dot") #type:ignore
     return flat_dict #type:ignore
-
-
-    #return flatten(new_dict, reducer="dot")
 
 def _process_dict_for_aliases(input_dict: dict[str,Any]) -> dict[str,Any]:
     # Create a copy of the dictionary to modify and return

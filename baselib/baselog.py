@@ -120,6 +120,23 @@ def isValidString(s: str):
 def isEmptyString(s: str):
     return not isValidString(s)
 
+from typing import Any, Type
+
+def assertType(object: Any, typename: Type[Any], message: str) -> None:
+    """
+    Asserts that the given object is of the specified type.
+    Example: assertType("hello", str, "Has to be a string")
+
+    :param object: The object to check the type of.
+    :param typename: The type the object is expected to be.
+    :param message: The message to include in the exception if the check fails.
+    :raises TypeError: If the object is not of the expected type.
+    """
+    if not isinstance(object, typename):
+        raise TypeError(f"{message}. Expected type: {typename.__name__}, got: {type(object).__name__}")
+
+
+
 #**********************************************
 # End: Validation functions
 #**********************************************

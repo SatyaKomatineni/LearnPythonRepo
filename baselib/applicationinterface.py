@@ -39,3 +39,6 @@ class IApplication(ABC):
     def getLog(self) -> ICoreLog:
         """Return the logging interface used by the application."""
         pass
+
+
+
