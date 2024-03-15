@@ -8,3 +8,7 @@ class ApplicationObjectNames:
     APPLICATION_OBJ_NAME = "ApplicationObjects.Application"
     LOG_OBJECT_NAME = "ApplicationObjects.Log"
     CONFIG_OBJ_NAME = "ApplicationObjects.Config"
+
+class ConfigFactoryParamNames:
+    #This is a relative name
+    CLASS_NAME = "classname"

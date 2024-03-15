@@ -17,11 +17,13 @@ from baselib.loginterface import TrivialLog, ICoreLog
 from baselib.configinterface import IConfig
 from baselib.factoryinterface import IFactory
 from baselib.dictionaryconfig import BaseTOMLConfig
-from baselib.defaultfactory import DefaultFactory
+from appimplementations.defaultfactory import DefaultFactory
 from typing import Any, cast
 from baselib.configinterface import IConfig
-from baselib.defaultfactory import AbsFactory
+from appimplementations.defaultfactory import AbsFactory
 from appwall.appholder import ApplicationHolder
+from baselib.appconfignames import ApplicationObjectNames
+from baselib import baselog as log
 
 from baselib.objectinterfaces import (ISingleton, IInitializableWithArgs)
 
@@ -75,28 +77,28 @@ class ConfigApplication(IApplication,ISingleton, IInitializableWithArgs):
     """
     def _createLog(self) -> ICoreLog:
         fact = self._getBootstrapFactory()
-        app.
+        try:
+            # Use TrivialConfigLog as an example to create one of these
+            return fact.getObjectAbsolute(ApplicationObjectNames.LOG_OBJECT_NAME, None)
+        except Exception as e:
+            log.logException("Failed to create a log object", e)
+            return TrivialLog()
 
     def _createConfig(self, configfilename: str) -> IConfig:
-        return BaseTOMLConfig(configfilename)
-
+        fact = self._getBootstrapFactory()
+        try:
+            # Use TOMLConfig as an example to create one of these via config
+            return fact.getObjectAbsolute(ApplicationObjectNames.CONFIG_OBJ_NAME, configfilename)
+        except Exception as e:
+            log.logException("Failed to create a config object", e)
+            return BaseTOMLConfig(configfilename)
+        
     def _createFactory(self, config: IConfig):
-        return BaseFactory(config)
-
-class BaseFactory(AbsFactory):
-    _config: IConfig
-
-    def __init__(self, config: IConfig):
-        self._config = config
-
-    def getObjectAbsolute(self, identifier: str, args: Any) -> Any:
-        """
-        Abstract method to be implemented by subclasses.
-        """
-        fqcn = self._config.getValue(identifier)
-        class_obj = DefaultFactory.load_class(fqcn)
-        obj = class_obj()
-        new_obj = DefaultFactory.processSingleOrMultiInstance(identifier,obj,args)
-        return new_obj
-
+        fact = self._getBootstrapFactory()
+        try:
+            # Use TOMLConfig as an example to create one of these via config
+            return fact.getObjectAbsolute(ApplicationObjectNames.FACTORY_OBJ_NAME, None)
+        except Exception as e:
+            log.logException("Failed to create a factory object", e)
+            return DefaultFactory()
 

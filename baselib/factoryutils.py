@@ -87,37 +87,4 @@ def create_class_instance_with_default(full_class_name: str, default_object: Any
         log.logException(f"Failed to load and instantiate {full_class_name} due to an unexpected error", e)
     return default_object
 
-"""
-*************************************************
-* BaseFactory
-*************************************************
-Goal:
-1. Based on a dictionary
-
-Logic:
-I). Create an abstract class BaseFactory
-2. abstract method
-    1. getDictionary() -> dict[str, Any]
-3. private instance variables
-    1. dictionary: dict[str, Any]
-4. __init__
-    1. calls the getDictionary() and sets the local dictionary
-2. instance methods
-    1. getObject(name: str) -> Any
-        locate the value from dictionary using 'name' as the key
-        raise an exception if not found
-        return if found
-    2. getObjectWithDefault(name: str, defaultobj: Any) -> Any
-        call getObject and return its output
-        if an exception return the defaultobj
-
-II). Create a second class called TOMLBaseFactory extending BaseFactory
-1. __init__ takes a filename
-    stores the filename in a private variable
-
-2. implements the getDictionary() abstract method
-    reads the file contents as a dictionary
-    returns the dictionary
-
-"""
 

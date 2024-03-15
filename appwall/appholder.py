@@ -19,6 +19,10 @@ class ApplicationHolder():
     application: IApplication | None = None
 
     @staticmethod
+    def getApplication() -> IApplication:
+        return ApplicationHolder.application #type:ignore
+    
+    @staticmethod
     def initializeApplication(config_filename: str):
         log.validate_not_null_or_empty(config_filename)
         ApplicationHolder.appconfig_filename = config_filename

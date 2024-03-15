@@ -48,8 +48,12 @@ Logic:
 
 import threading
 import importlib
-from typing import Any, Dict
+from typing import Any, Dict, Type
 from baselib.factoryinterface import IFactory
+from appwall.appobjectsinterface import AppObjects
+from baselib.appconfignames import ConfigFactoryParamNames
+from baselib import baselog as log
+from baselib.objectinterfaces import ISingleton, IInitializable
 
 from baselib.objectinterfaces import (
     IInitializable,
@@ -63,7 +67,7 @@ from baselib.objectinterfaces import (
 * AbstractFactory
 *************************************************
 """
-class AbsFactory(IFactory):
+class AbsFactory(IFactory, ISingleton, IInitializable):
 
     def getObjectWithDefault(self, identifier: str, args: Any, defaultObject: Any) -> Any:
         """
@@ -88,39 +92,65 @@ class AbsFactory(IFactory):
 
 # Assuming the preliminary interface definitions from the previous explanation
 
-class DefaultFactory(AbsFactory):
+class DefaultFactory(AbsFactory, ISingleton, IInitializable):
     _cache: Dict[str, Any] = {}
     _lock = threading.Lock()
 
+    configRootContext: str
     """
     *************************************************
-    * Initialization
+    * Initialization and Contract methods
     *************************************************
     1. It doesn't need initialization for dependencies
     2. Assumes the BaseApplication object is in place while this is being constructed
     """    
     def __init__(self):
-        pass
+        self.configRootContext = ""
+
+    def initialize(self, rootContext: str) -> None:
+        self.configRootContext = rootContext
 
     """
     *************************************************
     * abstract methods for IFactory
     *************************************************
     """
+    """
+    1. Return an object based on singleton or multiinstance
+    2. identifier: The absolute root in the config file where the desired object is anchored
+    3. args: Based on the receiver pass on the arguments. Pass through args
+    4. To know the nature of args look at the receiving class objects
+    5. Entry method into this class
+    """
     def getObjectAbsolute(self, identifier: str, args: Any) -> Any:
-        pass
+        #Figure out the classname
+        config = AppObjects.getConfig()
+        fqcn = config.getValue(identifier + "." + ConfigFactoryParamNames.CLASS_NAME)
+
+        #get
+        obj_instance = self._getObjectGivenClassname(fqcn,identifier,args)
+        return obj_instance
 
     """
     *************************************************
     * Rest of the implementation
     *************************************************
     """
+    """
+    Given a fully qualified classname load its class 
+    """
     @staticmethod
-    def load_class(fqcn: str) -> Any:
+    def load_class(fqcn: str) -> Type[Any]:
         module_name, class_name = fqcn.rsplit('.', 1)
         module = importlib.import_module(module_name)
         return getattr(module, class_name)
     
+    """
+    1. Given an object that is just loaded call its contracting methods
+    2. The object can be a single or multiinstance
+    3. Take into account initializable with or without args
+    4. Take into account if it is a executor
+    """
     @staticmethod
     def processSingleOrMultiInstance(config_root_context: str, obj: Any, objargs: Any) -> Any:
         if isinstance(obj, IInitializableWithArgs):
@@ -134,9 +164,21 @@ class DefaultFactory(AbsFactory):
         return obj
     
     """
+    ***********************************************
+    Goal:
+    1. Given a classname load its class
+    2. if a singleton put it in the cache
+    3. call the contract methods
+    4. It does this by calling other methods
+    5. At the end return an object that is
+        1. cached
+        2. its obligatory methods executed
+
+    Params:
     fqcn: fully qualified classname
     config_root_context: where this object is anchored in the config file
     objectargs: the client passed arguments meant for the instantiated object
+    ***********************************************
     """
     def _getObjectGivenClassname(self, fqcn: str, config_root_context: str, objectargs: Any) -> Any:
         if fqcn in self._cache:
@@ -148,7 +190,7 @@ class DefaultFactory(AbsFactory):
             with self._lock:
                 if fqcn in self._cache:
                     return self._cache[fqcn]
-                print(f"Creating a singleton of type: {fqcn}")
+                log.info(f"Creating a singleton of type: {fqcn}")
                 instance = class_obj()
                 instance = self.processSingleOrMultiInstance(instance, config_root_context, objectargs)
                 self._cache[fqcn] = instance
@@ -156,3 +198,5 @@ class DefaultFactory(AbsFactory):
         else:
             instance = class_obj()
             return self.processSingleOrMultiInstance(instance, config_root_context, objectargs)
+
+
