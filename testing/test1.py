@@ -25,10 +25,26 @@ def opArgFunction2(arg1: str, arg2: Optional[str] = None):
     if not arg2 is None:
         log.info(arg2)
 
+"""
+*************************************************
+* Test paths
+*************************************************
+"""
+from baselib import fileutils
+def testCurrentPath():
+    curpath = fileutils.getCurrentFileRoot(__file__)
+    log.ph("Cur filepath", curpath)
+
+"""
+*************************************************
+* Test executors
+*************************************************
+"""
 def test():
     testStringConcat()
     opArgFunction("Hello")
     opArgFunction2("Hello")
+    testCurrentPath()
 
 def localTest():
     log.ph1("Starting local test")

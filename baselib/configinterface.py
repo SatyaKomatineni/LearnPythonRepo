@@ -84,3 +84,14 @@ class IConfig(ABC):
     @abstractmethod
     def getValueAsObject(self, key:str) -> Any:
         pass
+
+
+"""
+*************************************************
+* For debugging purposes
+*************************************************
+"""
+class IDictionaryConfig(IConfig):
+    @abstractmethod
+    def getKeyValuesAsDictionary(self) -> dict[str, Any]:
+        pass

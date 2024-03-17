@@ -10,10 +10,6 @@ Goal:
 
 """
 from baselib.applicationinterface import IApplication
-from baselib import baselog as log
-from baselib.baseapplication import BaseApplication
-from baselib.appconfignames import ApplicationObjectNames
-
 class ApplicationHolder():
     appconfig_filename: str = ""
     application: IApplication | None = None
@@ -23,15 +19,11 @@ class ApplicationHolder():
         return ApplicationHolder.application #type:ignore
     
     @staticmethod
-    def initializeApplication(config_filename: str):
-        log.validate_not_null_or_empty(config_filename)
-        ApplicationHolder.appconfig_filename = config_filename
-        ApplicationHolder.application = BaseApplication(config_filename)
+    def setBaseApplication(configfilename: str, baseapp: IApplication):
+        ApplicationHolder.appconfig_filename = configfilename
+        ApplicationHolder.application = baseapp
 
     @staticmethod
-    def _createRealApplication():
-        fact = ApplicationHolder.application.getFactory() #type:ignore
-        try:
-            fact.getObjectAbsolute(ApplicationObjectNames.APPLICATION_OBJ_NAME, ApplicationHolder.appconfig_filename)
-        except Exception as e:
-            return 
+    def setRealApplication(realApp: IApplication):
+        ApplicationHolder.application = realApp
+

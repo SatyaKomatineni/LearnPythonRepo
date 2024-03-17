@@ -27,6 +27,9 @@ def getSonnetsRoot():
 def pathjoin(seg1: str, path: str):
     return os.path.join(seg1,path)
 
+def pathjoin_segments(seg1: str, *pathSegments: str):
+    return os.path.join(seg1, *pathSegments)
+
 def getTempDataRoot():
     return os.path.join(getDataRoot(),"tempdata")
 
@@ -35,6 +38,13 @@ def _getProjectRoot() -> str:
     parent = baselibPath.parent.parent.resolve()
     return str(parent)
 
+"""
+Returns the parent directory where this file is residing
+param: current_file_ref: use the __file__ where you are calling this function
+"""
+def getCurrentFileRoot(current_file_ref: str) -> str:
+    path = Path(current_file_ref)
+    return str(path.parent)
 
 
 """

@@ -15,7 +15,8 @@ Usage:
 """
 import regex as re
 from typing import Any
-   
+import pprint   
+
 """
 #**********************************************
 Backlog:
@@ -31,6 +32,8 @@ Backlog:
 #**********************************************
 # Functions
 #**********************************************
+
+pp = pprint.PrettyPrinter(indent=4)
 
 global_debug = True
 
@@ -173,6 +176,9 @@ def testSummarizeDictionary():
     d = {1:"1", 2:"2"}
     summarizeDictionary(d)
 
+def prettyPrintDictionary(d: dict[Any,Any]):
+    pp.pprint(d)
+    
 #**********************************************
 # Utility functions
 #**********************************************

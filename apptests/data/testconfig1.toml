@@ -1,0 +1,24 @@
+#*************************************************
+#*  To test IConfig (3/15/24)
+#*************************************************
+
+# root level keys
+key1="key1"
+
+[topic1]
+key1 = "topic1 key1"
+# key2 belongs to topic 1 as well
+key2 = "key2 value"
+
+[topic2]
+aliasedkey="a@key1"
+
+[intvalues]
+five=5
+decimal=5.3
+
+[datetimes]
+date=2024-03-17
+datetime1=2024-03-17T10:00:00
+datetime2=2024-03-17T14:00:00
+time=09:00:00

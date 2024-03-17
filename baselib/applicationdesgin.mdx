@@ -10,6 +10,8 @@ Main ideas:
 5. Optimize factory object cache locking for non singletons
 6. Equivalence of factory invocation and direct instantiation
 7. How do you know what object to pass to the factory instantiation?
+8. Tracing Log specs: initialization
+9. An alternate design for bootstrapping and initialization
 
 ## Configuration objects
 *****************************************
@@ -71,3 +73,22 @@ tbd
 3. If it implements IInitializableWithArgs, pass that specific type of object
 4. You have to look at the source code of that object
 5. This means all targets of that interface belongs to that class of objects
+
+# Tracing Log specs: initialization
+***************************
+1. Application initialization heading with a config filename
+2. Instantiate the base application with log, config, and basefactory
+3. Creating the real application log, config, base factory
+4. Assing the new application
+5. Report what are the app objects used for 
+    log: 
+    config:
+    factory:
+    application:
+6. Sing off the application
+
+# An alternate design for bootstrapping and initialization
+***************************
+1. What do you loose if you explicitly initialize the AppObjects explicitly
+2. Instead of the the config file as the route?
+3. May be provide that option as part of the library.

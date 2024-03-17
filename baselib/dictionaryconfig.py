@@ -53,23 +53,26 @@ Create a class DictionaryConfig
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 from baselib.objectinterfaces import IInitializableWithArgs
-from baselib.configinterface import IConfig
+from baselib.configinterface import IDictionaryConfig
 
-class DictionaryConfig(IInitializableWithArgs, IConfig, ABC):
+class DictionaryConfig(IInitializableWithArgs, IDictionaryConfig, ABC):
     _dataDictionary: Dict[str, Any]
 
     @abstractmethod
-    def getDictionary(self, args: Any) -> Dict[str, Any]:
+    def _getDictionary(self, args: Any) -> Dict[str, Any]:
         pass
 
     def initializeWithArgs(self, rootContext: str, args: Any) -> None:
-        self._dataDictionary = self.getDictionary(args)
+        self._dataDictionary = self._getDictionary(args)
 
     def getValueAsObject(self, key: str) -> Any:
         if key in self._dataDictionary:
             return self._dataDictionary[key]
         else:
             raise KeyError(f"Key not found: {key}")
+        
+    def getKeyValuesAsDictionary(self) -> dict[str, Any]:
+        return self._dataDictionary
 
 """
 *************************************************
@@ -81,7 +84,7 @@ from baselib import baselog as log
 from typing import cast
 
 class TOMLConfig(DictionaryConfig):
-    def getDictionary(self, args: Any = None) -> Dict[str, Any]:
+    def _getDictionary(self, args: Any = None) -> Dict[str, Any]:
         """
         1. validate args
         2. read config file

@@ -10,7 +10,7 @@ from baselib.loginterface import ICoreLog
 from baselib.configinterface import IConfig
 from baselib.factoryinterface import IFactory
 from appwall.appholder import ApplicationHolder
-from baselib import baselog as log
+#from baselib import baselog as log
 
 class AppObjects():
     @staticmethod

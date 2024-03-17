@@ -122,4 +122,6 @@ class BaseFactory(AbsFactory):
         new_obj = DefaultFactory.processSingleOrMultiInstance(identifier,obj,args)
         return new_obj
 
+    def initialize(self, rootContext: str) -> None:
+        raise Exception("Not expected to be initialized from configuration")
 

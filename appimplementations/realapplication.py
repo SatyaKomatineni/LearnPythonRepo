@@ -20,14 +20,13 @@ from baselib.dictionaryconfig import BaseTOMLConfig
 from appimplementations.defaultfactory import DefaultFactory
 from typing import Any, cast
 from baselib.configinterface import IConfig
-from appimplementations.defaultfactory import AbsFactory
 from appwall.appholder import ApplicationHolder
 from baselib.appconfignames import ApplicationObjectNames
 from baselib import baselog as log
 
 from baselib.objectinterfaces import (ISingleton, IInitializableWithArgs)
 
-class ConfigApplication(IApplication,ISingleton, IInitializableWithArgs):
+class DefaultConfigApplication(IApplication,ISingleton, IInitializableWithArgs):
 
     config: IConfig
     log: ICoreLog
@@ -52,7 +51,7 @@ class ConfigApplication(IApplication,ISingleton, IInitializableWithArgs):
         self.config = self._createConfig(configfilename)
         self.factory = self._createFactory(self.config)
 
-    def _getBootstrapFactory() -> IFactory:
+    def _getBootstrapFactory(self) -> IFactory:
         fact = ApplicationHolder.application.getFactory() #type:ignore
         return fact
 
@@ -102,3 +101,7 @@ class ConfigApplication(IApplication,ISingleton, IInitializableWithArgs):
             log.logException("Failed to create a factory object", e)
             return DefaultFactory()
 
+
+class DirectDefaultApplication(DefaultConfigApplication):
+    def __init__(self, configfilename: str):
+        super()._init(configfilename)
