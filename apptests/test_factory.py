@@ -4,7 +4,8 @@ from baselib import baselog as log
 from baselib.objectinterfaces import (
     ISingleton, 
     IInitializable, 
-    IInitializableWithArgs)
+    IInitializableWithArgs,
+    IExecutor)
 
 
 """
@@ -18,7 +19,7 @@ from appwall.appinitializer import AppInitializer
 from appwall.appobjectsinterface import AppObjects
 from baselib import fileutils as fileutils
 from baselib.configinterface import IDictionaryConfig
-
+from typing import Any
 
 def _getConfigFilename() -> str:
     curdir = fileutils.getCurrentFileRoot(__file__)
@@ -49,9 +50,28 @@ class TestConfig(unittest.TestCase):
         testclassObj = fact.getObjectAbsolute("testclass", None)
         log.prettyPrintObject(testclassObj)
 
+    def test_Executor(self):
+        log.info("Testing Executor object")
+        fact = AppObjects.getFact()
+        reply = fact.getObject("readdata", None)
+        log.info(f"Reply from readdata transaction: {reply}")
 """
 *************************************************
-* TestClass
+* Test IExecutor
+*************************************************
+[request.readdata]
+classname="apptests.test_factory.HelloWorldReader"
+text="Hello world"
+"""
+
+class HelloWorldReader(IExecutor):
+    def execute(self, config_root_context: str, args: Any) -> Any:
+        cfg = AppObjects.getConfig()
+        text = cfg.getValue(config_root_context + ".text")
+        return text
+"""
+*************************************************
+* Test IInitializable, Singleton: TestClass
 *************************************************
 """
 class TestClass(ISingleton, IInitializable):
