@@ -150,7 +150,21 @@ class TestConfig(unittest.TestCase):
         log.info(value)
         value = cfg.getValueAsObject("datetimes.time")
         log.info(value)
-    
+
+    """
+    *************************************************
+    * list values
+    *************************************************
+    [lists]
+    numberlist=[1,2,34]
+    """    
+    def test1_getValueAsObjectLists(self):
+        cfg = AppObjects.getConfig()
+        log.info("Testing for list values")
+
+        value = cfg.getValueAsObject("lists.numberlist")
+        targetList = [1,2,34]
+        self.assertListEqual(value,targetList)
 """
 *************************************************
 * End of class: unittest

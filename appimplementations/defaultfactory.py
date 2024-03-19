@@ -152,7 +152,7 @@ class DefaultFactory(AbsFactory, ISingleton, IInitializable):
     4. Take into account if it is a executor
     """
     @staticmethod
-    def processSingleOrMultiInstance(config_root_context: str, obj: Any, objargs: Any) -> Any:
+    def processSingleOrMultiInstance(obj: Any, config_root_context: str, objargs: Any) -> Any:
         if isinstance(obj, IInitializableWithArgs):
             # Assuming no args for simplicity; adjust as necessary
             obj.initializeWithArgs(config_root_context,objargs)
@@ -192,11 +192,11 @@ class DefaultFactory(AbsFactory, ISingleton, IInitializable):
                     return self._cache[fqcn]
                 log.info(f"Creating a singleton of type: {fqcn}")
                 instance = class_obj()
-                instance = self.processSingleOrMultiInstance(instance, config_root_context, objectargs)
+                instance = DefaultFactory.processSingleOrMultiInstance(instance, config_root_context, objectargs)
                 self._cache[fqcn] = instance
                 return instance
         else:
             instance = class_obj()
-            return self.processSingleOrMultiInstance(instance, config_root_context, objectargs)
+            return DefaultFactory.processSingleOrMultiInstance(instance, config_root_context, objectargs)
 
 

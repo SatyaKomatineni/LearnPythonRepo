@@ -63,7 +63,7 @@ def load_class(full_class_name: str) -> Any:
     module_name, class_name = full_class_name.rsplit('.', 1)
     module = importlib.import_module(module_name)
     cls: Type[Any] = getattr(module, class_name)
-    return cls()
+    return cls
 
 def create_class_instance_with_default(full_class_name: str, default_object: Any) -> Any:
     """
@@ -87,4 +87,46 @@ def create_class_instance_with_default(full_class_name: str, default_object: Any
         log.logException(f"Failed to load and instantiate {full_class_name} due to an unexpected error", e)
     return default_object
 
+"""
+*************************************************
+* Reflection methods
+*************************************************
+""" 
+def _createObjWithInit(cls: Type[Any], args: dict[str,Any]) -> Any:
+    return cls(**args)
 
+def _testCreateObjwithInit():
+    cls = load_class("baselib.factoryutils.TestClass")
+    argDict = {"arg1": "hello", "arg2": 5, "additional_org": "additional_stuff", "and more": "stuff"}
+    obj = _createObjWithInit(cls, argDict)
+    log.prettyPrintObject(obj)
+
+    log.ph1("Direct instantiation test")
+    obj = TestClass("hello", 1)
+    log.prettyPrintObject(obj)
+
+class TestClass():
+    arg1: str
+    arg2: int
+    defaultarg: str
+    def __init__(self, arg1: str, arg2: int, defaultarg: str = "charge", **kwargs: dict[str, Any]):
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.defaultarg = defaultarg
+        log.prettyPrintDictionary(kwargs)
+
+"""
+*************************************************
+* Base testing support
+*************************************************
+"""
+def test():
+    _testCreateObjwithInit()
+
+def localTest():
+    log.ph1("Starting local test")
+    test()
+    log.ph1("End local test")
+
+if __name__ == '__main__':
+    localTest()

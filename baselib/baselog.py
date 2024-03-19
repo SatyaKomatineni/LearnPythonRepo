@@ -178,6 +178,9 @@ def testSummarizeDictionary():
 
 def prettyPrintDictionary(d: dict[Any,Any]):
     pp.pprint(d)
+
+def prettyPrintObject(o: Any):
+    pp.pprint(o.__dict__)
     
 #**********************************************
 # Utility functions

@@ -1,0 +1,9 @@
+#*************************************************
+#*  To test IConfig (3/15/24)
+# See: appconfignames.py for filling this file
+#*************************************************
+
+[testclass]
+classname="apptests.test_factory.TestClass"
+#paramnames=None
+#default_param_names=None
